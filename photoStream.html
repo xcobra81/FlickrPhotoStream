@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- Custom css overriding some of Bootstrap -->
+        <link href="css/style.css" rel="stylesheet" type="text/css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <title>Flickr Fabolous PhotoStream</title>
+    </head>
+    
+    <body>
+        
+        <!-- jQuery for Bootstrap plugins -->
+        <script src="js/jquery-2.1.4.min.js"></script>
+        <!-- bootstrap js plugins -->
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        
+        <script language="javascript" type="text/javascript">
+		   $(function()
+		   {
+				// Use public feeds API
+				var flickerAPI = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+				
+                // Send the initial json request to flickr
+				$.getJSON(flickerAPI, {format: "json"}).done(function(data)
+				{
+                    // Loop through the results to setup the Carousel
+					$.each(data.items, function(i,item)
+					{
+						// Extract the url of the photo
+						var photoURL = item.media.m;
+					   
+                        // Carousel elements
+                        var dots  = '<li data-target="#carousel" data-slide="' + i + '"';
+                        // item is active only if it is the first element
+                        if ( i == 0  ) {   dots += ' class="active"';}
+                            dots += '></li>';
+                        
+                        // Append the image to carousel container
+                        $(dots).appendTo('.carousel-indicators');
+                        
+                        // Carousel images
+                        var image  = '<div class="item ';
+                        
+                        // item is active only if it is the first element
+                        if ( i == 0  ) {   image += 'active';}
+                            image += '"><img src="' + photoURL + '"/></div>';
+                        
+                        // Append the image to carousel container
+                        $(image).appendTo('.carousel-inner');
+					});
+
+					// Loop through the results to build up the grid
+					$.each(data.items, function(i,item)
+					{
+						// Extract the url of the photo
+						var photoURL = item.media.m;
+
+						// Extract the variables we need to show
+						var photoTitle;  	
+                        if(item.title.length > 15)
+                        { 
+                            //if Pic Title is too big then abbreviate it like "VeryVeryVeryLongTitle" -> "VeryVeryVe...tle"
+                            photoTitle = item.title.substr(0, 10) + '..' + item.title.substr(item.title.length-3, item.title.length);
+                        }
+                        else 
+                        {
+                            photoTitle = item.title;
+                        }
+						
+                        var photoLink		= item.link;
+						var photoAuthorId 	= item.author_id;
+                        var authorLink      = 'https://www.flickr.com/photos/'+photoAuthorId;
+						var photoAuthor 	= item.author.substring(item.author.lastIndexOf("(")+1,item.author.lastIndexOf(")"));
+						var photoDesc 		= item.description;
+						var photoTags	    = item.tags;
+					                        
+                        // Add widgets dynamically
+                        var widget  = '<div class="col-md-3 ';
+                        
+                        // If @media is too small, we only show 2 pics for a design choice
+                        if ( i > 1 ) 
+                        {   
+                            widget += 'hidden-sm hidden-xs';
+                        }
+                        else 
+                        { 
+                            widget += 'col-xs-6';
+                        }
+                                                                           
+                        widget += '"><img class="img-thumbnail img-responsive" src="' + photoURL + '"/>';
+                        widget += '<h3 class="voffset2"><a href="' + photoURL + '">'+ photoTitle + '</a></h3>';
+                        widget += '<p class="text-center pull-left"><a href="' + authorLink + '">By ' + photoAuthor + '</a></p>';
+                        widget += '<a class="btn btn-default pull-right" data-toggle="modal" data-target="#desc'+ i +'">More..</a>'; 
+                        widget += '</div>';
+                        
+						// Append the widget to its container
+						$(widget).appendTo('#widgets');
+                        
+                        // Modal Description
+                        var modalDesc  = '<div id="desc' + i + '" class="modal fade" role="dialog">';
+                            modalDesc += '<div class="modal-dialog">';
+                            modalDesc += '<div class="modal-content"><div class="modal-header">';
+                            modalDesc += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                            modalDesc += '<h4 class="modal-title">' + photoTitle + '</h4></div><div class="modal-body">';
+                            modalDesc += '<p><b>Image title: </b> ' + item.title + '</p><p><b>Photo Description: </b>'  ;
+                            modalDesc += photoDesc + '</p><p><b>Tags: </b>'+ photoTags+'</p></div><div class="modal-footer">';
+                            modalDesc += '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+                            modalDesc += '</div></div></div></div>';
+                        
+                        // Append the modalDesc to its container
+						$(modalDesc).appendTo('.container');
+                        
+                        // Stop at the 3rd picture on JSON
+                        if ( i === 3 ) {return false;}
+					});
+				});
+               
+			});
+	   </script>
+
+        <!-- Header Flickr-like style -->
+        <div id="headerWrap" class="wrap">
+	       <header class="container">
+    	       <nav id="mainNav">
+                    <nav id="mainNav" class="navbar navbar-inverse" role="navigation">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" s> 
+                                    <span class="sr-only">Toggle navigation</span> 
+                                    <span class="icon-bar"></span> 
+                                    <span class="icon-bar"></span> 
+                                    <span class="icon-bar"></span> 
+                                </button>
+                                <a href="#" class="navbar-brand">FlickrPhotoStream</a> 
+                            </div>
+                            <div class="collapse navbar-collapse" id="mainMenu">
+                                <ul class="nav navbar-nav">
+                                    <li><a href="#">About me</a></li>
+                                    <li class="dropdown"> 
+                                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">Cool Functions
+                                            <span class="caret"></span></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="#">Almost invented</a></li>
+                                            <li><a href="#">To be invented</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="#">Nice to have</a></li>
+                                            <li><a href="#">Utopia</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">To Be Said</a></li>
+                                </ul>
+                                <form class="navbar-form navbar-right" role="search">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="search by tag..">
+                                    </div>
+                                </form>
+                            </div>
+                     </nav>
+                </nav>
+            </header>
+        </div>
+
+        <!-- Container for Carousel, citation and grid -->
+        <div class="container">
+                <div id="carousel"  class="carousel slide" data-ride="carousel"> 
+                    <!-- indicators -->
+                    <ol class="carousel-indicators">
+                    </ol>
+                    <!-- slides -->
+                    <div class="carousel-inner">
+                    </div>
+                    <!-- browsing buttons --> 
+                        <a class="left carousel-control" href="#carousel" role="button" data-slide="prev"> <span class="glyphicon glyphicon-chevron-left"></span></a> 
+                        <a class="right carousel-control" href="#carousel" role="button" data-slide="next"> <span class="glyphicon glyphicon-chevron-right"></span></a> 
+                </div>
+            
+            <!-- Citation and Grid -->
+            <div id="content">
+                <div class="row voffset4">
+                    <div id="citation" class="col-md-6 text-center col-md-offset-3">
+                        <blockquote>“Creativity is intelligence having fun”.
+                            <footer><cite>Albert Einstein</cite></footer>
+                        </blockquote>
+                    </div>
+                </div>
+                
+                <!-- Grid of 4 elements -->
+                <div class="row voffset4" id="widgets">
+                </div>
+                
+            </div>
+        </div>
+        
+        <!-- Footer, not fundamental, but it looks better to have some visual closure -->
+        <div id="footerWrap" class="wrap">
+	       <footer class="container">
+                <nav id="tools">
+                    <div id="footerWrap" class="voffset5">
+                        <footer class="container">
+                            <p class="text-center">When nothing goes right, just go left!</p>
+                        </footer>
+                    </div>
+                </nav>
+            </footer>
+        </div>
+        
+    </body>
+</html>
