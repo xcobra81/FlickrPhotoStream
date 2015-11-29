@@ -147,7 +147,6 @@
                             </div>
                             <div class="collapse navbar-collapse" id="mainMenu">
                                 <ul class="nav navbar-nav">
-                                    <li><a href="#">About me</a></li>
                                     <li class="dropdown"> 
                                         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" href="#">Cool Functions
                                             <span class="caret"></span></a>
@@ -159,7 +158,25 @@
                                             <li><a href="#">Utopia</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="#">To Be Said</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#aboutThis">About this work</a></li>
+                                        <!-- Modal for About This -->
+                                        <div id="aboutThis" class="modal fade" role="dialog">
+                                          <div class="modal-dialog"><div class="modal-content"><div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">About this work</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                    <p> This is a simple single page application to show basic interaction with Flickr public API key.</p>
+                                                    <p> As in any software creation, there's a lot could potentially be done, 
+                                                            such as search by tag or some dynamic loading of the grid.</p>
+                                                    <p> Any other specific API other than "http://api.flickr.com/services/feeds/photos_public.gne?"
+                                                            would require an active personal API Key.</p>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                              </div>
+                                            </div></div>
+                                        </div>
                                 </ul>
                                 <form class="navbar-form navbar-right" role="search">
                                     <div class="form-group">
@@ -172,6 +189,7 @@
             </header>
         </div>
 
+        
         <!-- Container for Carousel, citation and grid -->
         <div class="container">
                 <div id="carousel"  class="carousel slide" data-ride="carousel"> 
