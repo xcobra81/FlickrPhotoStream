@@ -27,6 +27,7 @@
         <!-- bootstrap js plugins -->
         <script src="bootstrap/js/bootstrap.min.js"></script>
         
+        
         <script language="javascript" type="text/javascript">
 		   $(function()
 		   {
@@ -35,6 +36,11 @@
 				
                 // Send the initial json request to flickr
 				$.getJSON(flickerAPI, {format: "json"}).done(function(data)
+                /*  IF we wanted to search by tag (so using the search field i've put ont he top right of the menu)
+                    this previouse code line would simply be:
+                        
+                        $.getJSON(flickerAPI, {tags: "mount rainier",tagmode: "any",format: "json"}).done(function(data)
+                */
 				{
                     // Loop through the results to setup the Carousel
 					$.each(data.items, function(i,item)
@@ -108,7 +114,7 @@
                         
 						// Append the widget to its container
 						$(widget).appendTo('#widgets');
-                        
+                                                
                         // Modal Description
                         var modalDesc  = '<div id="desc' + i + '" class="modal fade" role="dialog">';
                             modalDesc += '<div class="modal-dialog">';
@@ -124,7 +130,7 @@
 						$(modalDesc).appendTo('.container');
                         
                         // Stop at the 3rd picture on JSON
-                        if ( i === 3 ) {return false;}
+                        //if ( i === 3 ) {return false;}
 					});
 				});
                
@@ -215,7 +221,7 @@
                 </div>
                 
                 <!-- Grid of 4 elements -->
-                <div class="row voffset4" id="widgets">
+                <div class="row voffset4" style="display:flex; flex-wrap: wrap;" id="widgets">
                 </div>
                 
             </div>
